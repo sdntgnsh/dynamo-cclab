@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  node1:
+    build: .
+    environment:
+      - NODE_ID=node1:8000
+      - NODES=node1:8000,node2:8000,node3:8000,node4:8000,node5:8000
+      - N=3
+      - W=2
+      - R=2
+    ports:
+      - "8001:8000"
+
+  node2:
+    build: .
+    environment:
+      - NODE_ID=node2:8000
+      - NODES=node1:8000,node2:8000,node3:8000,node4:8000,node5:8000
+      - N=3
+      - W=2
+      - R=2
+    ports:
+      - "8002:8000"
+
+  node3:
+    build: .
+    environment:
+      - NODE_ID=node3:8000
+      - NODES=node1:8000,node2:8000,node3:8000,node4:8000,node5:8000
+      - N=3
+      - W=2
+      - R=2
+    ports:
+      - "8003:8000"
+
+  node4:
+    build: .
+    environment:
+      - NODE_ID=node4:8000
+      - NODES=node1:8000,node2:8000,node3:8000,node4:8000,node5:8000
+      - N=3
+      - W=2
+      - R=2
+    ports:
+      - "8004:8000"
+
+  node5:
+    build: .
+    environment:
+      - NODE_ID=node5:8000
+      - NODES=node1:8000,node2:8000,node3:8000,node4:8000,node5:8000
+      - N=3
+      - W=2
+      - R=2
+    ports:
+      - "8005:8000"
