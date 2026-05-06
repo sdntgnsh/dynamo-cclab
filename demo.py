@@ -5,11 +5,11 @@ import json
 import sys
 
 BASE_NODES = {
-    "node1": "http://10.42.0.29:8001",
-    "node2": "http://10.42.0.29:8002",
-    "node3": "http://10.42.0.29:8003",
-    "node4": "http://10.42.0.1:8004",
-    "node5": "http://10.42.0.1:8005",
+    "node1": "http://192.168.137.212:8001",
+    "node2": "http://192.168.137.212:8002",
+    "node3": "http://192.168.137.212:8003",
+    "node4": "http://192.168.137.80:8004",
+    "node5": "http://192.168.137.80:8005",
 }
 PRIMARY = BASE_NODES["node1"]
 
@@ -248,4 +248,3 @@ if __name__ == "__main__":
     print("\n" + "="*70)
     print("   Demo Complete! All concepts demonstrated.")
     print("="*70 + "\n")
-rint("="*70 + "\n")
