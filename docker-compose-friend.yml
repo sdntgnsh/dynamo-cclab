@@ -1,0 +1,26 @@
+version: '3.8'
+
+x-env: &common-env
+  NODES: "10.42.0.29:8001,10.42.0.29:8002,10.42.0.29:8003,10.42.0.65:8004,10.42.0.65:8005"
+  N: "3"
+  W: "2"
+  R: "2"
+
+services:
+  node4:
+    build: .
+    container_name: dynamo-node4-1
+    environment:
+      <<: *common-env
+      NODE_ID: "10.42.0.65:8004"
+    ports:
+      - "8004:8000"
+
+  node5:
+    build: .
+    container_name: dynamo-node5-1
+    environment:
+      <<: *common-env
+      NODE_ID: "10.42.0.65:8005"
+    ports:
+      - "8005:8000"
