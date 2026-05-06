@@ -105,7 +105,8 @@ class MetricsCollector:
 
     def _percentiles(self, data: List[float]) -> Dict[str, float]:
         if not data:
-            return {"p50": 0.0, "p95": 0.0, "p99": 0.0, "min": 0.0, "max": 0.0, "mean": 0.0}
+            return {"p50": 0.0, "p95": 0.0, "p99": 0.0, "p999": 0.0, "min": 0.0, "max": 0.0, "mean": 0.0}
+        import math
         sorted_data = sorted(data)
         n = len(sorted_data)
 
@@ -114,11 +115,11 @@ class MetricsCollector:
             idx = max(0, min(idx, n - 1))
             return round(sorted_data[idx], 3)
 
-        import math
         return {
             "p50":  percentile(50),
             "p95":  percentile(95),
             "p99":  percentile(99),
+            "p999": percentile(99.9),
             "min":  round(sorted_data[0], 3),
             "max":  round(sorted_data[-1], 3),
             "mean": round(statistics.mean(sorted_data), 3),

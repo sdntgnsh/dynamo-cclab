@@ -180,6 +180,50 @@ def demo_merkle_trees():
     info("Reading from Node3 to prove it has the latest data (Alice is 26).")
     get(BASE_NODES["node3"], "user_data")
 
+def test_cluster_connectivity():
+    header("PRE-FLIGHT: Cluster Connectivity Test")
+    info("Checking if all nodes (including your friend's at 192.168.137.80) are reachable...")
+    all_up = True
+    for name, url in BASE_NODES.items():
+        try:
+            r = httpx.get(f"{url}/", timeout=3)
+            if r.status_code == 200:
+                ok(f"{name} ({url}) is UP!")
+            else:
+                warn(f"{name} ({url}) returned HTTP {r.status_code}")
+                all_up = False
+        except Exception as e:
+            warn(f"{name} ({url}) is DOWN or UNREACHABLE! Error: {e}")
+            all_up = False
+    
+    if not all_up:
+        warn("Some nodes are unreachable. Please verify IPs and ensure Docker is running on both machines.")
+        info("Ensure firewall rules allow traffic on port 8000-8005.")
+        sys.exit(1)
+    else:
+        ok("All 5 nodes are successfully connected over the network!")
+
+def print_metrics_table():
+    print("\nTable 2: Performance of client-driven and server-driven coordination approaches.")
+    info("Fetching final metrics from Primary node...")
+    try:
+        r = httpx.get(f"{PRIMARY}/metrics", timeout=5)
+        data = r.json()
+        
+        read_p999 = data.get("get", {}).get("latency_ms", {}).get("p999", 0.0)
+        write_p999 = data.get("put", {}).get("latency_ms", {}).get("p999", 0.0)
+        read_mean = data.get("get", {}).get("latency_ms", {}).get("mean", 0.0)
+        write_mean = data.get("put", {}).get("latency_ms", {}).get("mean", 0.0)
+        
+        print(f"\n{'':<15} | {'99.9th percentile':<17} | {'99.9th percentile':<18} | {'Average read':<12} | {'Average write':<12}")
+        print(f"{'Approach':<15} | {'read latency(ms)':<17} | {'write latency(ms)':<18} | {'latency (ms)':<12} | {'latency (ms)':<12}")
+        print("-" * 87)
+        print(f"{'Server-driven':<15} | {read_p999:<17.2f} | {write_p999:<18.2f} | {read_mean:<12.2f} | {write_mean:<12.2f}")
+        print(f"{'Client-driven':<15} | {'30.4 (Paper)':<17} | {'30.4 (Paper)':<18} | {'1.55 (Paper)':<12} | {'1.9 (Paper)':<12}")
+        print("\nNote: Our current Python implementation uses Server-driven coordination (coordinator node handles replication).")
+    except Exception as e:
+        warn(f"Failed to fetch metrics: {e}")
+
 
 # ─── Main Execution ───────────────────────────────────────────────────────────
 
@@ -188,7 +232,9 @@ if __name__ == "__main__":
     print("   Amazon Dynamo — Simplified Concept-by-Concept Demonstration")
     print("="*70)
     
-    info("Waiting 3s for cluster to be ready...")
+    test_cluster_connectivity()
+    
+    info("Waiting 3s for cluster to stabilize...")
     time.sleep(3)
     
     demo_consistent_hashing_and_replication()
@@ -197,6 +243,9 @@ if __name__ == "__main__":
     demo_gossip_protocol()
     demo_merkle_trees()
     
+    print_metrics_table()
+    
     print("\n" + "="*70)
-    print("   Demo Complete! All 6 concepts successfully demonstrated.")
+    print("   Demo Complete! All concepts demonstrated.")
     print("="*70 + "\n")
+rint("="*70 + "\n")
